@@ -16,7 +16,12 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 public sealed class TableExpression : TableExpressionBase, IClonableTableExpressionBase
 {
     internal TableExpression(ITableBase table)
-        : base(table.Name.Substring(0, 1).ToLowerInvariant())
+        : this(table, annotations: null)
+    {
+    }
+
+    private TableExpression(ITableBase table, IEnumerable<IAnnotation>? annotations)
+        : base(alias: table.Name.Substring(0, 1).ToLowerInvariant(), annotations)
     {
         Name = table.Name;
         Schema = table.Schema;
@@ -31,7 +36,16 @@ public sealed class TableExpression : TableExpressionBase, IClonableTableExpress
             expressionPrinter.Append(Schema).Append(".");
         }
 
-        expressionPrinter.Append(Name).Append(" AS ").Append(Alias);
+        expressionPrinter.Append(Name);
+        var annotations = GetAnnotations();
+        if (annotations.Any())
+        {
+            expressionPrinter.Append("[");
+            expressionPrinter.Append(annotations.Select(a => a.Name + "=" + a.Value).Join(" | "));
+            expressionPrinter.Append("]");
+        }
+
+        expressionPrinter.Append(" AS ").Append(Alias);
     }
 
     /// <summary>
@@ -61,7 +75,7 @@ public sealed class TableExpression : TableExpressionBase, IClonableTableExpress
 
     /// <inheritdoc />
     public TableExpressionBase Clone()
-        => new TableExpression(Table) { Alias = Alias };
+        => new TableExpression(Table, GetAnnotations()) { Alias = Alias };
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

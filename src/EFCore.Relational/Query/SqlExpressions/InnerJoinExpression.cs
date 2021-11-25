@@ -20,7 +20,15 @@ public class InnerJoinExpression : PredicateJoinExpressionBase
     /// <param name="table">A table source to INNER JOIN with.</param>
     /// <param name="joinPredicate">A predicate to use for the join.</param>
     public InnerJoinExpression(TableExpressionBase table, SqlExpression joinPredicate)
-        : base(table, joinPredicate)
+        : this(table, joinPredicate, annotations: null)
+    {
+    }
+
+    private InnerJoinExpression(
+        TableExpressionBase table,
+        SqlExpression joinPredicate,
+        IEnumerable<IAnnotation>? annotations)
+        : base(table, joinPredicate, annotations)
     {
     }
 

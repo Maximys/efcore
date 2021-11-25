@@ -19,7 +19,12 @@ public class CrossApplyExpression : JoinExpressionBase
     /// </summary>
     /// <param name="table">A table source to CROSS APPLY with.</param>
     public CrossApplyExpression(TableExpressionBase table)
-        : base(table)
+        : this(table, annotations: null)
+    {
+    }
+
+    private CrossApplyExpression(TableExpressionBase table, IEnumerable<IAnnotation>? annotations)
+        : base(table, annotations)
     {
     }
 

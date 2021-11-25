@@ -19,7 +19,12 @@ public class OuterApplyExpression : JoinExpressionBase
     /// </summary>
     /// <param name="table">A table source to OUTER APPLY with.</param>
     public OuterApplyExpression(TableExpressionBase table)
-        : base(table)
+        : this(table, annotations: null)
+    {
+    }
+
+    private OuterApplyExpression(TableExpressionBase table, IEnumerable<IAnnotation>? annotations)
+        : base(table, annotations)
     {
     }
 
